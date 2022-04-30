@@ -107,8 +107,8 @@ class Database {
     }
 
     _checkingByEntering(e){
-        if(e.keyCode !== 13) return;
         e.preventDefault();
+        if(e.keyCode !== 13) return;
         const firstName = firstNameBox.value;
         const lastName = lastNameBox.value;
         const email = emailBox.value;
