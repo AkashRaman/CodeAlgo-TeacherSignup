@@ -80,7 +80,7 @@ class Database {
     #currentAccount;
     constructor(){
         this._getLocalStorage();
-        form.addEventListener('submit', this._checkingByEntering.bind(this));
+        form.addEventListener('keypress', this._checkingByEntering.bind(this));
         btnSignin.addEventListener('click', this._checkingByClicking.bind(this));
     }
     
@@ -107,6 +107,7 @@ class Database {
     }
 
     _checkingByEntering(e){
+        if(e.keyCode !== 13) return;
         e.preventDefault();
         const firstName = firstNameBox.value;
         const lastName = lastNameBox.value;
