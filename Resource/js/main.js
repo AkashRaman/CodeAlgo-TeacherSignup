@@ -107,28 +107,30 @@ class Database {
     }
 
     _checkingByEntering(e){
-        e.preventDefault();
         
-        if(e.keyCode !== 13) return;
-        const firstName = firstNameBox.value;
-        const lastName = lastNameBox.value;
-        const email = emailBox.value;
-        const password = passwordBox.value;
-        
-        if (firstNameBox === document.activeElement){
-            lastNameBox.focus();
-            return ;
+
+        if(e.keyCode === 13){
+            e.preventDefault();
+            const firstName = firstNameBox.value;
+            const lastName = lastNameBox.value;
+            const email = emailBox.value;
+            const password = passwordBox.value;
+            
+            if (firstNameBox === document.activeElement){
+                lastNameBox.focus();
+                return ;
+            }
+            if (lastNameBox === document.activeElement){
+                emailBox.focus();
+                return ;
+            }
+            if (emailBox === document.activeElement){
+                passwordBox.focus(); 
+                return ;
+            }
+            
+            this._setCurrentAccount(firstName,lastName,email,password);
         }
-        if (lastNameBox === document.activeElement){
-            emailBox.focus();
-            return ;
-        }
-        if (emailBox === document.activeElement){
-            passwordBox.focus(); 
-            return ;
-        }
-        
-        this._setCurrentAccount(firstName,lastName,email,password);
     }
 
     _setCurrentAccount(firstName,lastName,email,password){
