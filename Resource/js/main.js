@@ -52,6 +52,7 @@ const btnSignin = document.querySelector('#btn-signin');
 //      }
 //  }
   
+
   class Teacher{
     firstName;
     lastName;
@@ -63,7 +64,6 @@ const btnSignin = document.querySelector('#btn-signin');
       this.lastName = lastName;
       this.email = email;
       this.password = password;
-      this.regno = regno;
     }
   }
   
