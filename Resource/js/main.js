@@ -114,11 +114,11 @@ class Database {
         const email = emailBox.value;
         const password = passwordBox.value;
         
-        if (firstName === document.activeElement){
+        if (firstNameBox === document.activeElement){
             lastNameBox.focus();
             return ;
         }
-        if (lastName === document.activeElement){
+        if (lastNameBox === document.activeElement){
             emailBox.focus();
             return ;
         }
