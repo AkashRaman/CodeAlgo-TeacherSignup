@@ -2,39 +2,156 @@
 
 const store = document.getElementById('name');
 
+const firstNameBox = document.getElementById('firstName-box');
+const lastNameBox = document.getElementById('lastName-box');
+const emailBox = document.getElementById('email-box');
+const passwordBox = document.getElementById('password-box');
+const form = document.querySelector('.form');
+const btnSignin = document.querySelector('#btn-signin');
+
 // const guest = {
 //     name: 'Guest',
 //     email: 'unknown',
 //     password: 'unknown'
 // }
 // localStorage.clear()
-// localStorage.setItem('guest',JSON.stringify({
-//     firstName: 'Guest',
-    // lastName: 'Guest',
-//     email: 'unknown',
-//     password: 'unknown'
-// }))
-class database {
+// localStorage.setItem('accounts',JSON.stringify([{
+//     type: 'student',
+//     firstName: 'Akash',
+//     lastName: 'Raman',
+//     email: 'akashramanj.csbs2020@citchennai.net',
+//     password: '083020codealgo',
+//     regno: 210420244021
+// },
+// {
+//     type: 'student',
+//     firstName: 'Sai',
+//     lastName: 'Subash',
+//     email: 'saisubash.csbs2020@citchennai.net',
+//     password: '083020codealgo',
+//     regno: 210420244021
+// },
+// {
+//     type: 'teacher',
+//     firstName: 'Akshay',
+//     lastName: 'Raman',
+//     email: 'akshayramanj.csbs2020@citchennai.net',
+//     password: '083020codealgo',
+// }]))
+
+// class Account {
+//     firstName;
+//     lastName;
+//     email;
+//     password;
+//     constructor(firstName, lastName, email, password){
+//     this.firstName = firstName;
+//     this.lastName = lastName;
+//     this.email = email;
+//     this.password = password;
+//      }
+//  }
+  
+  class Teacher{
+    firstName;
+    lastName;
+    email;
+    password;
+    type = 'teacher';
+    constructor(firstName,lastName,email,password) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.email = email;
+      this.password = password;
+      this.regno = regno;
+    }
+  }
+  
+///   class Teacher extends Account {
+//     type = 'teacher';
+//     constructor(firstName, lastName, email, password) {
+//       super(firstName, lastName, email, password);
+//     }
+//   }
+  
+
+class Database {
     #accounts;
     #currentAccount;
     constructor(){
         this._getLocalStorage();
+        form.addEventListener('submit', this._checkingByEntering.bind(this));
+        btnSignin.addEventListener('click', this._checkingByClicking.bind(this));
     }
     
     _getLocalStorage(){
-        const data = JSON.parse(localStorage.getItem('currentAccount'));
-        if(!data){
-            const guest = JSON.parse(localStorage.getItem('guest'));
-            this.#currentAccount = guest;
-            store.insertAdjacentHTML('afterbegin',`${guest.firstName}`);
-            console.log(guest.name);
+        this.#currentAccount = JSON.parse(localStorage.getItem('currentAccount'));
+        this.#accounts = JSON.parse(localStorage.getItem('accounts'));
+        console.log(this.#accounts);
+        console.log(this.#currentAccount);
+    }
+
+    _checkingByClicking(e){
+        e.preventDefault();
+        const firstName = firstNameBox.value;
+        const lastName = lastNameBox.value;
+        const email = emailBox.value;
+        const password = passwordBox.value;
+
+        if(!(firstName&&lastName&&email&&password)){
+            alert("Enter every details");
+            return ;
+        }
+
+        this._setCurrentAccount(firstName,lastName,email,password);
+    }
+
+    _checkingByEntering(e){
+        e.preventDefault();
+        const firstName = firstNameBox.value;
+        const lastName = lastNameBox.value;
+        const email = emailBox.value;
+        const password = passwordBox.value;
+        
+        if (firstName === document.activeElement){
+            lastNameBox.focus();
+            return ;
+        }
+        if (lastName === document.activeElement){
+            emailBox.focus();
+            return ;
+        }
+        if (emailBox === document.activeElement){
+            passwordBox.focus(); 
+            return ;
+        }
+        
+        this._setCurrentAccount(firstName,lastName,email,password);
+    }
+
+    _setCurrentAccount(firstName,lastName,email,password){
+
+        if (!email.includes('@')){
+            alert('Invalid Email');
             return;
         }
-        store.insertAdjacentHTML('afterbegin',`${data.firstName}`);
-        console.log(data.name);
+
+        const foundedAccount = this.#accounts.find(
+            account => (account.type == 'teacher' && account.email === email)
+          );
+
+        if(foundedAccount){
+            alert('There is a matching account');
+            return ;
+        }
+
+        this.#currentAccount = new Teacher(firstName,lastName,email,password);
+        this.#accounts.push(this.#currentAccount)
+        localStorage.removeItem('currentAccount')
+        localStorage.removeItem('accounts')
+        localStorage.setItem('currentAccount',JSON.stringify(this.#currentAccount));
+        localStorage.setItem('accounts',JSON.stringify(this.#accounts));
     }
 }
 
-const d = new database();
-
-
+const d = new Database();
