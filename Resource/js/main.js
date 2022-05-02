@@ -5,6 +5,7 @@ const store = document.getElementById('name');
 const firstNameBox = document.getElementById('firstName-box');
 const lastNameBox = document.getElementById('lastName-box');
 const emailBox = document.getElementById('email-box');
+const staffIdBox = document.getElementById('staffId-box');
 const passwordBox = document.getElementById('password-box');
 const form = document.querySelector('.form');
 const btnSignup = document.querySelector('#btn-signup');
@@ -58,12 +59,14 @@ const btnCWLogin = document.querySelector('#btn-cwlogin');
     firstName;
     lastName;
     email;
+    staffId;
     password;
     type = 'teacher';
-    constructor(firstName,lastName,email,password) {
+    constructor(firstName,lastName,email,staffId,password) {
       this.firstName = firstName;
       this.lastName = lastName;
       this.email = email;
+      this.staffId = staffId;
       this.password = password;
     }
   }
@@ -104,14 +107,15 @@ class Database {
         const firstName = firstNameBox.value;
         const lastName = lastNameBox.value;
         const email = emailBox.value;
+        const staffId = staffIdBox.value;
         const password = passwordBox.value;
 
-        if(!(firstName&&lastName&&email&&password)){
+        if(!(firstName&&lastName&&email&&staffId&&password)){
             alert("Enter every details");
             return ;
         }
 
-        this._setCurrentAccount(firstName,lastName,email,password);
+        this._setCurrentAccount(firstName,lastName,email,staffId,password);
     }
 
     _checkingByEntering(e){
@@ -122,6 +126,7 @@ class Database {
             const firstName = firstNameBox.value;
             const lastName = lastNameBox.value;
             const email = emailBox.value;
+            const staffId = staffIdBox.value;
             const password = passwordBox.value;
             
             if (firstNameBox === document.activeElement){
@@ -133,15 +138,20 @@ class Database {
                 return ;
             }
             if (emailBox === document.activeElement){
+                staffIdBox.focus(); 
+                return ;
+            }
+            
+            if (staffIdBox === document.activeElement){
                 passwordBox.focus(); 
                 return ;
             }
             
-            this._setCurrentAccount(firstName,lastName,email,password);
+            this._setCurrentAccount(firstName,lastName,email,staffId,password);
         }
     }
 
-    _setCurrentAccount(firstName,lastName,email,password){
+    _setCurrentAccount(firstName,lastName,email,staffId,password){
 
         if (!email.includes('@')){
             alert('Invalid Email');
@@ -149,7 +159,7 @@ class Database {
         }
 
         const foundedAccount = this.#accounts.find(
-            account => (account.type == 'teacher' && account.email === email)
+            account => (account.type == 'teacher' && (account.email === email || account.staffId === staffId))
           );
 
         if(foundedAccount){
@@ -158,7 +168,7 @@ class Database {
         }
 
 
-        this.#currentAccount = new Teacher(firstName,lastName,email,password);
+        this.#currentAccount = new Teacher(firstName,lastName,email,staffId,password);
         this.#accounts.push(this.#currentAccount)
         localStorage.setItem('currentAccount',JSON.stringify(this.#currentAccount));
         localStorage.setItem('accounts',JSON.stringify(this.#accounts));
